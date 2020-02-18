@@ -79,11 +79,11 @@ sub cipher_reverse
 sub cipher_replace
 {
     my ($cipher, $idx) = @_;
-    my $first = substr ($cipher, 0, 1);
-    my $loc = $idx % length ($cipher);
-    my $item = substr ($cipher, $loc, 1);
-    substr ($cipher, 0, 1, $item);
-    substr ($cipher, $loc, 1, $first);
+    my $first = substr $cipher, 0, 1;
+    my $loc = $idx % length $cipher;
+    my $item = substr $cipher, $loc, 1;
+    substr $cipher, 0, 1, $item;
+    substr $cipher, $loc, 1, $first;
     return $cipher;
 }
 
@@ -112,7 +112,8 @@ sub parse_cipher
 {
     my $c = shift;
     $c = F4N::split_query ($c);
-    return $c->{"s"};
+    $c->{"s"} = F4N::url_decode $c->{"s"};
+    return $c;
 }
 
 "End...";

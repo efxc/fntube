@@ -24,9 +24,9 @@ sub url_encode
 sub url_decode
 {
     my $st = shift;
-    $st =~ s/\+/ /;
+    $st =~ s/\+/ /g if $st;
     $st =~
-	s/%([a-fA-F0-9]{2})/pack ('C', hex ($1))/eg;
+	s/%([a-fA-F0-9]{2})/chr (hex ($1))/eg if $st;
     return $st;
 }
 

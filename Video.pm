@@ -71,7 +71,7 @@ sub get_formats
     my $player_response = get_player_response $id;
     die "Video not playable." unless
 	$player_response->{"playabilityStatus"}->{"status"} eq "OK";
-    my $formats = $player_response->{"streamingData"}->{"formats"};
+    my $formats = $player_response->{"streamingData"}->{"adaptiveFormats"};
     return $formats;
 }
 
