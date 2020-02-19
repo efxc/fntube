@@ -16,19 +16,17 @@ use constant
 use constant
     V_INFO => BASE . "get_video_info?video_id=";
 
-=for quote
-“Nobody ever figures out what life is all about,
-and it doesn't matter. Explore the world. Nearly
-everything is really interesting if you go into it
-deeply enough.”  
-    ― Richard P. Feynman
-=cut
+# “Nobody ever figures out what life is all about,
+# and it doesn't matter. Explore the world. Nearly
+# everything is really interesting if you go into it
+# deeply enough.”  
+#     ― Richard P. Feynman
 
 sub get_video_info
 {
     my $id = shift;
     my $loc = V_INFO . "${id}&el=embedded&hl=en&eurl="
-	. EURL;
+	. F4N::url_encode (EURL . $id);
     my $page = F4N::fetch ($loc);
     $page = F4N::split_query ($page);
     return $page;
@@ -69,10 +67,14 @@ sub get_formats
 {
     my $id = shift;
     my $player_response = get_player_response $id;
+    my @empty = ();
+    my $e_ref = \@empty;
     die "Video not playable." unless
 	$player_response->{"playabilityStatus"}->{"status"} eq "OK";
-    my $formats = $player_response->{"streamingData"}->{"adaptiveFormats"};
-    return $formats;
+    my $af = $player_response->{"streamingData"}->{"adaptiveFormats"} || $e_ref;
+    my $uem = $player_response->{"streamingData"}->{"url_encoded_fmt_stream_map"} || $e_ref;
+    push @$af, @$uem;
+    return $af;
 }
 
 sub print_streams
@@ -95,7 +97,7 @@ sub get_player
 	my $json = get_player_config $id;
 	my $url = BASE . $json->{"assets"}->{"js"};
 	$player = F4N::fetch ($url);
-	$cache->set ("saved", $player, "10 d");
+	$cache->set ("saved", $player, "5 d");
     }
     return $player;
 }

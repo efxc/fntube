@@ -4,7 +4,7 @@ use warnings;
 use Exporter qw/import/;
 use LWP::UserAgent;
 
-our @EXPORT_OK = qw/url_encode fetch split_query/;
+our @EXPORT_OK = qw/url_decode url_encode fetch split_query/;
 
 =for quote
 “I cannot teach anybody anything. I can only make
@@ -34,8 +34,10 @@ sub fetch
 {
     my $loc = shift;
     my $ua = LWP::UserAgent->new;
+    $ua->show_progress;
     my $response = $ua->get ($loc);
-    die "Invalid response" unless $response->is_success;
+    die "Invalid response: " . $response->message
+	unless $response->is_success;
     return $response->decoded_content;
 }
 

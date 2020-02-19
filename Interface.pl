@@ -1,41 +1,47 @@
 use Video;
 use Cipher;
-use Data::Dumper qw/Dumper/;
+use Stream;
+use CGI ':standard';
+use strict;
+use warnings;
 
-=for quote
-“Be kind, for everyone you meet is fighting a
-harder battle.”
-    ― Plato
-=cut
+# “Be kind, for everyone you meet is fighting a
+# harder battle.”
+#     ― Plato
 
 my $v = shift;
-my $player = Video::get_player ($v);
-my $vinfo = Video::get_video_info $v;
-my $ops = Cipher::get_decipher_oplist ($player);
-my $streams = Video::get_formats ($v);
+my $streams = Stream::streams_as_array $v;
 
-for my $stream (@$streams)
-{
-    my $url = "";
-    if (defined $stream->{"cipher"})
-    {
-	my $a = Cipher::parse_cipher ($stream->{"cipher"});
-	my $sig = $a->{"s"};
-	if (defined $a->{"s"})
-	{
-	    $sig = $a->{"s"};
-	    print "sig: $sig\n";
-	    my $temp = $a->{"url"};
-	    $url .= F4N::url_decode ($temp);
-	}
-	$sig = Cipher::cipher_decipher ($sig, $ops);
-	$url = F4N::url_decode $stream->{"url"};
-	$url = $url . "&" . $a->{"sp"} . "=" . $sig;
-    }
-    else
-    {
-	$url = $stream->{"url"};
-    }
-    my @type = split /;/, $stream->{"mimeType"};
-    print "$type[0]:$stream->{qualityLabel}: $url\n";
-}
+# my $player = Video::get_player ($v);
+# my $ops = Cipher::get_decipher_oplist ($player);
+# my $streams = Video::get_formats ($v);
+
+# for my $stream (@$streams)
+# {
+#     my $url = "";
+#     if (defined $stream->{"cipher"})
+#     {
+# 	my $a = Cipher::parse_cipher ($stream->{"cipher"});
+# 	my $sig = $a->{"s"};
+	
+# 	if (defined $a->{"s"})
+# 	{
+# 	    $sig = $a->{"s"};
+# 	    my $temp = $a->{"url"};
+# 	    $url = $temp;
+# 	}
+	
+# 	$sig = Cipher::cipher_decipher ($sig, $ops);
+# 	$url = F4N::url_decode $url . "\&$a->{sp}=" .
+# 	    F4N::url_encode $sig;
+#     }
+
+#     else
+#     {
+# 	$url = $stream->{"url"};
+#     }
+
+#     my @type = split /;/, $stream->{"mimeType"};
+#     my $type = $type[0];
+#     print "$type: $url\n";
+# }

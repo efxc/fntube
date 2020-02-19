@@ -90,9 +90,10 @@ sub cipher_replace
 sub cipher_splice
 {
     my ($cipher, $idx) = @_;
-    my @c = split //, $cipher;
-    splice @c, 0, $idx;
-    $cipher = join "", @c;
+    $cipher = substr $cipher, $idx;
+    # my @c = split //, $cipher;
+    # splice @c, 0, $idx;
+    # $cipher = join "", @c;
     return $cipher;
 }
 
