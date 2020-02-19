@@ -1,0 +1,52 @@
+#!/usr/bin/perl -w
+use lib "/usr/lib/cgi-bin";
+
+use Video;
+use Cipher;
+use Stream;
+use CGI;
+use strict;
+use warnings;
+
+# “Be kind, for everyone you meet is fighting a
+# harder battle.”
+#     ― Plato
+my $cgi = CGI->new ();
+
+my $v = $cgi->param ("id");
+print $cgi->header ();
+my $streams;
+if (not defined $v)
+{
+    print "Hata. ID girilmesi zorunludur.\r\n";
+    exit;
+}
+eval { $streams = Stream::streams_as_array $v; "foo" }
+or do { print "Hata, $@\r\n"; exit };
+
+print "<table>";
+print <<'EOF';
+<tr>
+  <th>Quality</th>
+  <th>Type</th>
+  <th>File</th>
+</tr>
+EOF
+if ($streams)
+{
+    for my $s (@$streams)
+    {
+	print <<"EOF";
+<tr>
+  <td>$s->{quality}</td>
+  <td>$s->{type}</td>
+  <td><a href='$s->{url}'>Click!</a></td>
+</tr>
+EOF
+    }
+    print "</table>\r\n";
+}
+else
+{
+    print "Hata. Başka bilgi yok.\r\n";
+}

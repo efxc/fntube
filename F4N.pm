@@ -6,11 +6,9 @@ use LWP::UserAgent;
 
 our @EXPORT_OK = qw/url_decode url_encode fetch split_query/;
 
-=for quote
-“I cannot teach anybody anything. I can only make
-them think” 
-    ― Socrates
-=cut
+# “I cannot teach anybody anything. I can only make
+# them think” 
+#     ― Socrates
 
 sub url_encode
 {
