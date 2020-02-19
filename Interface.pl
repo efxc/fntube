@@ -1,16 +1,47 @@
 use Video;
 use Cipher;
 use Stream;
-use CGI ':standard';
+use CGI;
 use strict;
 use warnings;
 
 # “Be kind, for everyone you meet is fighting a
 # harder battle.”
 #     ― Plato
+my $cgi = CGI->new ();
 
-my $v = shift;
-my $streams = Stream::streams_as_array $v;
+my $v = $cgi->param ("id");
+print $cgi->header ();
+my $streams;
+eval { $streams = Stream::streams_as_array $v; "foo" }
+or do { print "Hata, $@" };
+
+print "<table>";
+print <<'EOF';
+<tr>
+  <th>Quality</th>
+  <th>Type</th>
+  <th>File</th>
+</tr>
+EOF
+if ($streams)
+{
+    for my $s (@$streams)
+    {
+	print <<"EOF";
+<tr>
+  <td>$s->{quality}</td>
+  <td>$s->{type}</td>
+  <td><a href='$s->{url}'>Click!</a></td>
+</tr>
+EOF
+    }
+    print "</table>";
+}
+else
+{
+    print "Hata. Başka bilgi yok.";
+}
 
 # my $player = Video::get_player ($v);
 # my $ops = Cipher::get_decipher_oplist ($player);
