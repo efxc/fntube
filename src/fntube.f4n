@@ -3,6 +3,7 @@ use lib "/usr/lib/cgi-bin";
 
 use Video;
 use Cipher;
+use F4N;
 use Stream;
 use CGI;
 use strict;
@@ -36,11 +37,12 @@ if ($streams)
 {
     for my $s (@$streams)
     {
+	my $u = F4N::url_encode $s->{"url"};
 	print <<"EOF";
 <tr>
   <td>$s->{quality}</td>
   <td>$s->{type}</td>
-  <td><a href='$s->{url}'>Click!</a></td>
+  <td><a href='down.f4n/$u'>Click!</a></td>
 </tr>
 EOF
     }

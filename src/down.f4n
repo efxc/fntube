@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w
+use lib "/usr/lib/cgi-bin";
+
+use strict;
+use warnings;
+use F4N;
+use CGI;
+use LWP::UserAgent;
+
+sub fetch
+{
+    my $loc = shift;
+    my $ua = LWP::UserAgent->new;
+    my $r = $ua->get ($loc);
+    die "Couldn't fetch URL." unless $r->is_success;
+    return $r->decoded_content;
+}
+
+my $cgi = CGI->new;
+my $type = $cgi->param ("t");
+my $loc = $cgi->param ("u");
+
+unless ($loc && $type)
+{
+    print $cgi->header (-type => "text/plain");
+    print "Yanlış kullanım.";
+    exit;
+}
+
+print $cgi->header (-type => $type);
+my $data = fetch F4N::url_decode $loc;
+print $data;
