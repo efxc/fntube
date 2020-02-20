@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use F4N;
 use Cipher;
-use Cache::File;
+# use Cache::File;
 use JSON::XS;
 use Exporter qw/import/;
 
@@ -29,6 +29,8 @@ sub get_video_info
 	. F4N::url_encode (EURL . $id);
     my $page = F4N::fetch ($loc);
     $page = F4N::split_query ($page);
+    die "Couldn't get info: video ID may be wrong."
+	if $page->{"status"} eq "fail";
     return $page;
 }
 
@@ -90,15 +92,15 @@ sub print_streams
 sub get_player
 {
     my $id = shift;
-    my $cache = Cache::File->new (cache_root => ".caches");
-    my $player = $cache->get ("saved");
-    if (!defined $player)
-    {
-	my $json = get_player_config $id;
-	my $url = BASE . $json->{"assets"}->{"js"};
-	$player = F4N::fetch ($url);
-	$cache->set ("saved", $player, "5 d");
-    }
+    # my $cache = Cache::File->new (cache_root => ".caches");
+    my $player = undef; # $cache->get ("saved");
+    # if (!defined $player)
+    # {
+    my $json = get_player_config $id;
+    my $url = BASE . $json->{"assets"}->{"js"};
+    $player = F4N::fetch ($url);
+    # $cache->set ("saved", $player, "5 d");
+    # }
     return $player;
 }
 
