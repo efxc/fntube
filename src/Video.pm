@@ -62,6 +62,7 @@ sub get_player_response
     my $json = JSON::XS->new;
     $player_config = $json->decode
 	(F4N::url_decode ($player_config->{"player_response"}));
+    die "Couldn't get player config." unless $player_config;
     return $player_config;
 }
 

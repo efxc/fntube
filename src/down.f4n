@@ -12,7 +12,8 @@ sub fetch
     my $loc = shift;
     my $ua = LWP::UserAgent->new;
     my $r = $ua->get ($loc);
-    die "Couldn't fetch URL." unless $r->is_success;
+    die "Couldn't fetch URL: " . $r->error_as_HTML
+	unless $r->is_success;
     return $r->decoded_content;
 }
 
@@ -28,5 +29,7 @@ unless ($loc && $type)
 }
 
 print $cgi->header (-type => $type);
-my $data = fetch F4N::url_decode $loc;
+my $data = undef;
+eval { $data = fetch F4N::url_decode $loc; 1 }
+or do { print "Hata: " . $@; exit };
 print $data;
