@@ -3,33 +3,24 @@ use lib "/usr/lib/cgi-bin";
 
 use strict;
 use warnings;
-use F4N;
+use F4N qw/url_decode/;
 use CGI;
 use LWP::UserAgent;
-
-sub fetch
-{
-    my $loc = shift;
-    my $ua = LWP::UserAgent->new;
-    my $r = $ua->get ($loc);
-    die "Couldn't fetch URL: " . $r->error_as_HTML
-	unless $r->is_success;
-    return $r->decoded_content;
-}
+use Digest::MD5 qw/md5_hex/;
 
 my $cgi = CGI->new;
 my $type = $cgi->param ("t");
 my $loc = $cgi->param ("u");
+my $id = $cgi->param ("i");
 
-unless ($loc && $type)
+unless ($loc && $type && $id)
 {
     print $cgi->header (-type => "text/plain");
     print "Yanlış kullanım.";
     exit;
 }
-
-print $cgi->header (-type => $type);
-my $data = undef;
-eval { $data = fetch F4N::url_decode $loc; 1 }
-or do { print "Hata: " . $@; exit };
-print $data;
+print $cgi->header (-type => "text/html");
+my $ua = LWP::UserAgent->new;
+my $fname = md5_hex ($id);
+print "<span><p>Konum: </p><a href='/$fname'>Click!</a> -- ($fname)</span>";
+my $request = $ua->mirror (url_decode ($loc), "/var/www/localhost/htdocs/$fname");

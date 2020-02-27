@@ -43,7 +43,7 @@ if ($streams)
 <tr>
   <td>$s->{quality}</td>
   <td>$s->{type}</td>
-  <td><a href='down.f4n?t=$t&u=$u'>Click!</a></td>
+  <td><a href='down.f4n?t=$t&u=$u&i=$v'>Click!</a></td>
 </tr>
 EOF
     }
