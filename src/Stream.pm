@@ -21,6 +21,7 @@ sub streams_as_array
 	    my $c = Cipher::parse_cipher $stream->{"cipher"};
 	    my $sig = $c->{"s"};
 	    $sig = Cipher::cipher_decipher $sig, $ops;
+	    $url = $c->{"url"};
 	    $url = join "", F4N::url_decode $url,
 		"&", $c->{"sp"}, "=", F4N::url_encode $sig;
 	}

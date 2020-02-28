@@ -7,7 +7,7 @@ use Cipher;
 use JSON::XS;
 use Exporter qw/import/;
 
-our @EXPORT_OK = qw/get_video_info get_formats/;
+our @EXPORT_OK = qw/get_video_info get_formats get_player_response/;
 
 use constant
     EURL => "https://youtube.googleapis.com/v/";

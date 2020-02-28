@@ -23,4 +23,10 @@ print $cgi->header (-type => "text/html");
 my $ua = LWP::UserAgent->new;
 my $fname = md5_hex ($id);
 print "<span><p>Konum: </p><a href='/$fname'>Click!</a> -- ($fname)</span>";
-my $request = $ua->mirror (url_decode ($loc), "/var/www/localhost/htdocs/$fname");
+if (defined (my $pid = fork ()))
+{
+    close STDOUT;
+    close STDIN;
+    my $request = $ua->mirror (url_decode ($loc),
+			       "/var/www/localhost/htdocs/$fname");
+}
